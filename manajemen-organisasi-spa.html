@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Organisasi ala Gen Z: Cepat, Fleksibel, Berdampak</title>
+    
+    <!-- Chosen Palette: Stadium Vibes (Primary Background: #F0FDF4 - Very light green, Accent 1: #059669 - Darker Green, Accent 2: #F59E0B - Amber/Gold, Text/Primary: #1F2937 - Dark Slate Gray, Secondary Content/Borders: #9CA3AF - Medium Gray, Tertiary/Subtle: #DBEAFE - Light Blue) -->
+    <!-- Application Structure Plan: A single-page, vertical scrolling narrative experience. The structure guides the user from a high-level hook (Hero) -> foundational knowledge ('What' & 'Why' with new 'Konsep Dasar' and 'Poin Pentingnya MO') -> tangible benefits ('Loot') -> modern application ('Gen Z Update') -> new 'Tantangan MO Gen Z' -> new 'Strategi Sukses Organisasi Gen Z' -> conclusion (CTA). The Hall of Fame and Sandbox sections have been removed per user request, making the flow more concise. -->
+    <!-- Visualization & Content Choices: 
+        - Hero: Goal: Hook -> Visual headline & bold text -> Justification: Grab attention instantly with World Cup theme.
+        - POLC Diagram: Goal: Organize -> HTML/CSS Diagram -> Interaction: Static visual aid -> Justification: Simplifies the core framework without complex libraries.
+        - Benefits Section: Goal: Inform -> Icon-based grid -> Justification: Easily scannable and visually appealing.
+        - Gen Z Adaptations: Goal: Organize/Compare -> Interactive Tabs (JS) -> Interaction: User clicks to reveal content -> Justification: Breaks down dense info into manageable chunks, promoting engagement.
+        - Removed Case Study Charts: No longer relevant as the Hall of Fame section is removed.
+        - Removed Sandbox Tool: No longer relevant as the Sandbox section is removed.
+        - Removed Campus Paguyuban Innovation Tool: No longer relevant as the Sandbox section is removed.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FDF4; /* Very light green, like a clean pitch */
+            color: #1F2937; /* Dark Slate Gray */
+        }
+        .accent-color { color: #F59E0B; } /* Amber/Gold */
+        .accent-bg { background-color: #F59E0B; }
+        .secondary-color { color: #059669; } /* Darker Green */
+        .secondary-bg { background-color: #059669; }
+        .light-bg { background-color: #F0FDF4; /* Lighter beige - same as body for consistent pitch feel */ }
+
+        .tab-btn.active {
+            background-color: #F59E0B; /* Gold for active tab */
+            color: white;
+            font-weight: 700;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+            background-color: #ffffff; /* White background for charts */
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+        .llm-feature {
+            background-color: #E0F2FE; /* Light blue, subtle team color */
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .llm-feature textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #9CA3AF; /* Medium gray for borders */
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            min-height: 80px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        .llm-feature textarea:focus {
+            outline: none;
+            border-color: #059669; /* Dark green on focus */
+        }
+        .llm-feature button {
+            background-color: #059669; /* Dark green for buttons */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .llm-feature button:hover {
+            background-color: #047857; /* Darker green on hover */
+            transform: translateY(-2px);
+        }
+        .llm-feature button:active {
+            transform: translateY(0);
+        }
+        .llm-output-area {
+            background-color: #F8FAFC; /* Lighter background for output */
+            border: 1px dashed #9CA3AF; /* Medium gray dashed border */
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            min-height: 100px;
+            text-align: left;
+            white-space: pre-wrap;
+            font-size: 1rem;
+            color: #1F2937;
+            overflow-y: auto;
+            max-height: 250px;
+        }
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #1F2937;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Hero Section -->
+    <header class="w-full min-h-screen flex items-center justify-center text-center p-4 overflow-hidden light-bg">
+        <div class="z-10 fade-in visible">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight">
+                MANAJEMEN ORGANISASI ALA GEN Z:
+                <span class="block accent-color mt-2 md:mt-4">CEPAT, FLEKSIBEL, BERDAMPAK.</span>
+            </h1>
+            <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">
+                Kuasai strategi yang membuatmu lincah beradaptasi, bergerak cepat, dan menghasilkan perubahan nyata dalam setiap proyek dan karirmu.
+            </p>
+            <p class="mt-2 text-lg md:text-xl text-gray-600 font-semibold">
+                Oleh : Jihad Nurul Islami
+            </p>
+            <a href="#the-what-and-why" class="mt-10 inline-block secondary-bg text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg hover:bg-opacity-90 transition-transform transform hover:scale-105">
+                Kick-Off Pembelajaran 👇
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full">
+
+        <!-- Section 1: The 'What' & 'Why' -->
+        <section id="the-what-and-why" class="py-16 sm:py-24 px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center fade-in">
+                    <h2 class="text-base font-semibold secondary-color tracking-wider uppercase">Dasar Manajemen Organisasi: Rencana Permainanmu!</h2>
+                    <p class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Apa Itu MO dan Kenapa Penting Banget?</p>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-500">Ini adalah seni dan ilmu mengatur segalanya (orang, uang, waktu, ide) agar tujuan kita tercapai dengan efektif & efisien, menjadikannya proses yang <strong>cepat, fleksibel, dan berdampak</strong>.</p>
+                </div>
+
+                <div class="mt-16 grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="fade-in">
+                        <h3 class="text-2xl font-bold mb-4">Analogi Sepak Bola</h3>
+                        <p class="text-lg text-gray-600 mb-4">Bayangkan tim sepak bola kesayanganmu. Ada kiper, bek, gelandang, penyerang. MO itu seperti strategi pelatihnya: siapa main di posisi apa, kapan menyerang, kapan bertahan, bagaimana set-piece, agar bisa cetak gol dan menang. Tanpa itu? Bola hanya akan berputar-putar di tengah lapangan tanpa arah, tidak <strong>cepat</strong> mencapai tujuan, tidak <strong>fleksibel</strong> terhadap lawan, dan tidak <strong>berdampak</strong> pada hasil akhir!</p>
+                        <h3 class="text-2xl font-bold mb-4 mt-8">Fungsi Inti MO (P.O.L.C)</h3>
+                        <div class="grid grid-cols-2 gap-6 mt-4">
+                            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-400">
+                                <h4 class="font-bold text-xl">Planning 🎯</h4>
+                                <p class="text-gray-600 mt-1">Menentukan tujuan & cara mencapainya agar langkahmu <strong>cepat</strong> dan <strong>berdampak</strong>.</p>
+                            </div>
+                             <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-400">
+                                <h4 class="font-bold text-xl">Organizing ⚙️</h4>
+                                <p class="text-gray-600 mt-1">Mengatur sumber daya & tugas secara <strong>fleksibel</strong> dan efisien.</p>
+                            </div>
+                             <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-400">
+                                <h4 class="font-bold text-xl">Leading 🚀</h4>
+                                <p class="text-gray-600 mt-1">Memotivasi & mengarahkan tim untuk bergerak <strong>cepat</strong> menuju visi.</p>
+                            </div>
+                             <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-400">
+                                <h4 class="font-bold text-xl">Controlling 📊</h4>
+                                <p class="text-gray-600 mt-1">Memastikan sesuai rencana dan melakukan koreksi agar tetap <strong>berdampak</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fade-in">
+                        <div class="p-8 light-bg rounded-2xl shadow-lg">
+                             <h3 class="text-2xl font-bold secondary-color mb-4">Jadi, Kenapa Ini 'Skill Penting' yang Harus Dimiliki?</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <span class="text-2xl mr-3">⏳</span>
+                                    <p><strong class="block text-lg">Menghemat Waktu & Energi (Cepat):</strong> Membantu kita fokus pada hal penting, tidak membuang waktu dan kerja dua kali, sehingga proses lebih <strong>cepat</strong>.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-2xl mr-3">🏆</span>
+                                    <p><strong class="block text-lg">Membuat Tujuan Tercapai (Berdampak):</strong> Memberikan peta jalan yang jelas untuk sukses, menghasilkan <strong>dampak</strong> yang nyata.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-2xl mr-3">🔄</span>
+                                    <p><strong class="block text-lg">Adaptif Terhadap Perubahan (Fleksibel):</strong> Organisasi menjadi lincah, tidak mudah kaget dengan tren baru, sehingga tetap <strong>fleksibel</strong>.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-2xl mr-3">🤝</span>
+                                    <p><strong class="block text-lg">Tim Makin Kompak (Cepat & Berdampak):</strong> Menciptakan suasana positif, minim drama. Semua tahu perannya, yang membuat tim bergerak <strong>cepat</strong> dan <strong>berdampak</strong>.</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Sub-section: Konsep Dasar Manajemen Organisasi -->
+                <div class="mt-20 fade-in">
+                    <h3 class="text-3xl font-extrabold secondary-color text-center mb-8">Konsep Dasar Manajemen Organisasi</h3>
+                    <div class="grid md:grid-cols-2 gap-8 bg-white p-8 rounded-xl shadow-lg">
+                        <div>
+                            <h4 class="font-bold text-xl accent-color mb-2">Definisi Mendalam</h4>
+                            <p class="text-gray-600">Manajemen organisasi adalah disiplin ilmu dan praktik yang berfokus pada perencanaan, pengorganisasian, kepemimpinan, dan pengendalian sumber daya suatu entitas (baik perusahaan, organisasi non-profit, atau kelompok kecil) untuk mencapai tujuan yang ditetapkan secara efisien dan efektif. Ini mencakup pengambilan keputusan strategis, alokasi sumber daya, koordinasi aktivitas, serta motivasi dan pengembangan individu dalam tim.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl accent-color mb-2">Pilar Utama</h4>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li><strong>Tujuan Jelas:</strong> Setiap organisasi harus memiliki visi dan misi yang spesifik dan terukur.</li>
+                                <li><strong>Struktur Efektif:</strong> Bagaimana tugas dibagi, siapa bertanggung jawab kepada siapa, dan bagaimana informasi mengalir.</li>
+                                <li><strong>Sumber Daya Optimal:</strong> Pemanfaatan manusia, finansial, fisik, dan informasi secara maksimal.</li>
+                                <li><strong>Proses Terkoordinasi:</strong> Alur kerja yang jelas dan sinergis antar bagian.</li>
+                                <li><strong>Budaya Organisasi:</strong> Nilai-nilai, norma, dan keyakinan yang membentuk perilaku anggota.</li>
+                            </ul>
+                            <p class="text-gray-600 mt-4">Memahami konsep ini adalah fondasi untuk membangun organisasi yang <strong>cepat, fleksibel, dan berdampak</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Sub-section: Poin Pentingnya Manajemen Organisasi -->
+                <div class="mt-20 fade-in">
+                    <h3 class="text-3xl font-extrabold secondary-color text-center mb-8">Poin Pentingnya Manajemen Organisasi</h3>
+                    <div class="grid md:grid-cols-2 gap-8 bg-white p-8 rounded-xl shadow-lg">
+                        <div>
+                            <h4 class="font-bold text-xl accent-color mb-2">Efisiensi Operasional</h4>
+                            <p class="text-gray-600">Manajemen yang baik memastikan setiap proses berjalan lancar dan minim pemborosan, sehingga sumber daya digunakan secara optimal dan hasil dicapai lebih <strong>cepat</strong>.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl accent-color mb-2">Pengambilan Keputusan Lebih Baik</h4>
+                            <p class="text-gray-600">Dengan data dan struktur yang jelas, pemimpin dapat membuat keputusan yang lebih tepat dan strategis, memberikan <strong>dampak</strong> positif bagi organisasi.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl accent-color mb-2">Peningkatan Kolaborasi Tim</h4>
+                            <p class="text-gray-600">Manajemen mendorong kerja sama yang efektif antar individu dan departemen, menciptakan lingkungan yang <strong>fleksibel</strong> dan produktif.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl accent-color mb-2">Adaptasi Terhadap Perubahan</h4>
+                            <p class="text-gray-600">Organisasi yang terkelola dengan baik lebih mampu beradaptasi dengan perubahan lingkungan eksternal, menjadikannya <strong>fleksibel</strong> dalam menghadapi tantangan.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl accent-color mb-2">Pencapaian Tujuan Strategis</h4>
+                            <p class="text-gray-600">Dengan perencanaan dan eksekusi yang terstruktur, organisasi lebih mungkin mencapai visi dan misi jangka panjangnya, menghasilkan <strong>dampak</strong> yang signifikan.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl accent-color mb-2">Pengembangan Bakat & Anggota</h4>
+                            <p class="text-gray-600">Manajemen yang efektif menciptakan peluang bagi anggota untuk tumbuh dan berkembang, meningkatkan potensi individu dan kolektif yang pada akhirnya <strong>berdampak</strong> positif pada organisasi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The 'Loot' -->
+        <section class="py-16 sm:py-24 px-4 light-bg">
+            <div class="max-w-7xl mx-auto text-center fade-in">
+                <h2 class="text-base font-semibold accent-color tracking-wider uppercase">Piala Prestasi</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Keuntungan yang Kamu Dapatkan (Cepat, Fleksibel, Berdampak)</p>
+                <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="text-5xl">🚀</span>
+                        <h3 class="mt-4 text-xl font-bold">PERTUMBUHAN CEPAT</h3>
+                        <p class="mt-2 text-gray-600">Organisasi jadi lebih cepat berkembang dan maju, tidak stagnan.</p>
+                    </div>
+                     <div class="bg-white p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="text-5xl">🛡️</span>
+                        <h3 class="mt-4 text-xl font-bold">PENGELOLAAN RISIKO</h3>
+                        <p class="mt-2 text-gray-600">Lebih siap dan tangguh menghadapi masalah atau krisis, tetap <strong>fleksibel</strong> dalam situasi sulit.</p>
+                    </div>
+                     <div class="bg-white p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="text-5xl">💡</span>
+                        <h3 class="mt-4 text-xl font-bold">SUMBER INOVASI</h3>
+                        <p class="mt-2 text-gray-600">Ide-ide kreatif lebih mudah muncul karena ada sistem yang <strong>fleksibel</strong> dan mendukung.</p>
+                    </div>
+                     <div class="bg-white p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="text-5xl">🏅</span>
+                        <h3 class="mt-4 text-xl font-bold">REPUTASI POSITIF</h3>
+                        <p class="mt-2 text-gray-600">Dikenal sebagai organisasi yang profesional, <strong>cepat</strong>, dan <strong>berdampak</strong>.</p>
+                    </div>
+                     <div class="bg-white p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="text-5xl">😊</span>
+                        <h3 class="mt-4 text-xl font-bold">SUASANA TIM POSITIF</h3>
+                        <p class="mt-2 text-gray-600">Lingkungan kerja yang suportif, minim konflik, kolaborasi maksimal, membuat tim <strong>cepat</strong> mencapai tujuan.</p>
+                    </div>
+                     <div class="bg-white p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="text-5xl">👑</span>
+                        <h3 class="mt-4 text-xl font-bold">POTENSI KEPEMIMPINAN</h3>
+                        <p class="mt-2 text-gray-600">Siap menjadi pemimpin hebat di masa depan, yang <strong>cepat</strong>, <strong>fleksibel</strong>, dan <strong>berdampak</strong> di mana pun kamu berada!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The 'Gen Z Update' -->
+        <section class="py-16 sm:py-24 px-4">
+             <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-base font-semibold secondary-color tracking-wider uppercase">Panduan Modern</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Manajemen Organisasi: Disesuaikan untuk Gen Z</p>
+            </div>
+            <div id="gen-z-tabs" class="mt-16 max-w-5xl mx-auto fade-in">
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-1/3 flex md:flex-col overflow-x-auto pb-4 md:pb-0">
+                        <button data-tab="1" class="tab-btn active text-left w-full md:w-auto flex-shrink-0 md:flex-shrink p-4 rounded-lg text-lg transition-colors">⚡ Lincah & Fleksibel</button>
+                        <button data-tab="2" class="tab-btn text-left w-full md:w-auto flex-shrink-0 md:flex-shrink p-4 rounded-lg text-lg transition-colors">📱 Berbasis Teknologi</button>
+                        <button data-tab="3" class="tab-btn text-left w-full md:w-auto flex-shrink-0 md:flex-shrink p-4 rounded-lg text-lg transition-colors">💬 Terbuka & Transparan</button>
+                        <button data-tab="4" class="tab-btn text-left w-full md:w-auto flex-shrink-0 md:flex-shrink p-4 rounded-lg text-lg transition-colors">🌐 Kolaborasi Penuh</button>
+                        <button data-tab="5" class="tab-btn text-left w-full md:w-auto flex-shrink-0 md:flex-shrink p-4 rounded-lg text-lg transition-colors">🌱 Berorientasi Tujuan</button>
+                        <button data-tab="6" class="tab-btn text-left w-full md:w-auto flex-shrink-0 md:flex-shrink p-4 rounded-lg text-lg transition-colors">🧠 Umpan Balik & Berkembang</button>
+                    </div>
+                    <div class="md:w-2/3 md:pl-8 mt-6 md:mt-0">
+                        <div id="tab-content-1" class="tab-content bg-white p-8 rounded-xl shadow-lg">
+                             <h3 class="text-2xl font-bold accent-color mb-3">Lincah & Fleksibel (Cepat Beradaptasi)</h3>
+                             <p class="text-lg text-gray-600">Bukan lagi era birokrasi kaku! Gen Z butuh MO yang gesit, bisa <strong>beradaptasi cepat</strong> dengan perubahan. Seperti kalian yang sangat <strong>cepat</strong> belajar tren baru! Gunakan metode Scrum atau Kanban sederhana dalam proyek kampus untuk tetap <strong>fleksibel</strong>.</p>
+                        </div>
+                        <div id="tab-content-2" class="tab-content hidden bg-white p-8 rounded-xl shadow-lg">
+                             <h3 class="text-2xl font-bold accent-color mb-3">Berbasis Teknologi (Cepat & Efisien)</h3>
+                             <p class="text-lg text-gray-600">Manfaatkan alat digital untuk efisiensi dan kecepatan: <strong class="secondary-color">Trello/Asana</strong> untuk manajemen tugas visual, <strong class="secondary-color">Notion/Google Docs</strong> untuk kolaborasi real-time, dan <strong class="secondary-color">Slack/Discord</strong> untuk komunikasi tim yang efektif. Ini membuat proses lebih <strong>cepat</strong> dan <strong>berdampak</strong>.</p>
+                        </div>
+                         <div id="tab-content-3" class="tab-content hidden bg-white p-8 rounded-xl shadow-lg">
+                             <h3 class="text-2xl font-bold accent-color mb-3">Terbuka & Transparan (Meningkatkan Dampak)</h3>
+                             <p class="text-lg text-gray-600">Gen Z menyukai hal yang jujur, apa adanya, dan jelas! Informasi yang terbuka meningkatkan kepercayaan tim dan mengurangi kesalahpahaman, yang pada akhirnya meningkatkan <strong>dampak</strong> positif.</p>
+                        </div>
+                         <div id="tab-content-4" class="tab-content hidden bg-white p-8 rounded-xl shadow-lg">
+                             <h3 class="text-2xl font-bold accent-color mb-3">Kolaborasi Penuh (Cepat & Fleksibel)</h3>
+                             <p class="text-lg text-gray-600">Lupakan hierarki kaku! MO Gen Z adalah tentang kolaborasi antar divisi, antar teman, bahkan lintas kampus. Ide bagus bisa datang dari mana saja, membuat tim <strong>cepat</strong> berinovasi dan <strong>fleksibel</strong> dalam pendekatan.</p>
+                        </div>
+                         <div id="tab-content-5" class="tab-content hidden bg-white p-8 rounded-xl shadow-lg">
+                             <h3 class="text-2xl font-bold accent-color mb-3">Berorientasi Tujuan (Berdampak Nyata)</h3>
+                             <p class="text-lg text-gray-600">Gen Z peduli pada tujuan yang lebih besar, bukan hanya keuntungan. Organisasi yang berhasil memberikan <strong>dampak positif</strong> adalah yang paling menarik. Fokus pada tujuan yang jelas akan membuat upaya lebih <strong>berdampak</strong>.</p>
+                        </div>
+                         <div id="tab-content-6" class="tab-content hidden bg-white p-8 rounded-xl shadow-lg">
+                             <h3 class="text-2xl font-bold accent-color mb-3">Umpan Balik & Berkembang (Fleksibel & Cepat Belajar)</h3>
+                             <p class="text-lg text-gray-600">MO Gen Z terbuka untuk umpan balik dan terus belajar dari kesalahan. Kita tidak takut untuk mencoba hal baru dan terus berkembang, menjadikan organisasi lebih <strong>fleksibel</strong> dan <strong>cepat</strong> dalam adaptasi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Tantangan Manajemen Organisasi untuk Gen Z -->
+        <section class="py-16 sm:py-24 px-4 light-bg">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-base font-semibold secondary-color tracking-wider uppercase">Tantangan Lapangan</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Tantangan Manajemen Organisasi untuk Gen Z</p>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-500">Meskipun Gen Z dikenal dengan kelincahan dan adaptasinya, ada beberapa tantangan unik dalam mengelola organisasi yang perlu diwaspadai:</p>
+            </div>
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">Rentang Perhatian Singkat</h3>
+                    <p class="text-lg text-gray-600">Gen Z terbiasa dengan informasi cepat dan instan. Tantangannya adalah menjaga fokus pada tujuan jangka panjang dan proses yang lebih kompleks.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">Ketergantungan Teknologi</h3>
+                    <p class="text-lg text-gray-600">Terlalu bergantung pada teknologi bisa mengurangi interaksi tatap muka dan kemampuan problem-solving di luar platform digital.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">Ekspektasi Fleksibilitas Tinggi</h3>
+                    <p class="text-lg text-gray-600">Meskipun positif, ekspektasi fleksibilitas yang berlebihan tanpa struktur yang jelas bisa menyebabkan kurangnya akuntabilitas dan arah.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">Mencari Tujuan & Dampak Instan</h3>
+                    <p class="text-lg text-gray-600">Keinginan untuk selalu melihat dampak nyata dan langsung bisa membuat Gen Z frustasi dengan proses yang butuh waktu.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Strategi Sukses Organisasi Gen Z -->
+        <section class="py-16 sm:py-24 px-4">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-base font-semibold secondary-color tracking-wider uppercase">Jalan Menuju Juara</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Strategi Sukses Organisasi Gen Z</p>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-500">Untuk mengatasi tantangan dan memaksimalkan potensi, berikut adalah strategi kunci manajemen organisasi yang cocok untuk Gen Z:</p>
+            </div>
+            <div class="mt-16 space-y-12 max-w-4xl mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">1. Rancang Organisasi Berbasis Tujuan (Purposeful)</h3>
+                    <p class="text-lg text-gray-600">Gen Z sangat peduli pada "mengapa" mereka melakukan sesuatu. Pastikan setiap divisi dan program memiliki tujuan yang jelas dan selaras dengan visi besar organisasi. Ini akan memicu motivasi intrinsik dan membuat setiap upaya terasa <strong>berdampak</strong>.</p>
+                    <p class="text-sm text-gray-500 mt-2">✨ Setiap divisi tahu kenapa mereka dibentuk dan apa kontribusi nyata mereka.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">2. Digitalisasi Proses Manajemen</h3>
+                    <p class="text-lg text-gray-600">Manfaatkan teknologi secara maksimal untuk semua aspek manajemen. Dari perencanaan, pelacakan proyek, hingga komunikasi. Ini membuat proses lebih <strong>cepat</strong> dan efisien, serta transparan.</p>
+                    <p class="text-sm text-gray-500 mt-2">💻 Semua progress tercatat secara digital, transparan, dan efisien. Contoh: Gunakan Asana/Trello untuk task management, Notion untuk knowledge base.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">3. Budaya Kolaboratif & Inklusif</h3>
+                    <p class="text-lg text-gray-600">Bangun lingkungan di mana setiap suara didengar, terlepas dari posisi atau senioritas. Promosikan kerja tim lintas fungsi dan berikan ruang bagi setiap anggota untuk berkontribusi. Ini menumbuhkan tim yang <strong>fleksibel</strong> dan inovatif.</p>
+                    <p class="text-sm text-gray-500 mt-2">🤝 Tidak ada senioritas berlebihan, semua ide didengar dan dihargai.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">4. Gaya Komunikasi Cepat & Visual</h3>
+                    <p class="text-lg text-gray-600">Hindari komunikasi bertele-tele. Gunakan platform yang mendukung komunikasi real-time, visual, dan to-the-point. Ini mempercepat alur informasi dan keputusan.</p>
+                    <p class="text-sm text-gray-500 mt-2">💬 Gunakan tools real-time (Discord, Slack, Notion, Miro, Canva) untuk komunikasi yang <strong>cepat</strong> dan efektif secara visual.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+                    <h3 class="text-2xl font-bold accent-color mb-3">5. Evaluasi Fleksibel Tapi Konsisten</h3>
+                    <p class="text-lg text-gray-600">Lakukan evaluasi secara berkala, namun dengan format yang tidak kaku. Fokus pada <em>feedback loop</em> yang konstruktif dan bisa disajikan dalam bentuk yang menyenangkan, seperti 'fun-review' atau sesi 'retrospektif' singkat. Ini mendorong perbaikan <strong>cepat</strong> dan adaptasi <strong>fleksibel</strong>.</p>
+                    <p class="text-sm text-gray-500 mt-2">🔄 Ada feedback loop berkala, bisa dalam bentuk fun-review, agar selalu <strong>berdampak</strong> positif.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="secondary-bg text-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 text-center">
+            <h2 class="text-3xl font-extrabold">Siap Jadi <span class="text-yellow-300">Next-Gen Leader?</span></h2>
+            <p class="mt-4 text-lg text-gray-200 max-w-3xl mx-auto">Manajemen Organisasi adalah toolset penting yang jadi bekalmu di dunia serba cepat ini. Mulai dari mengatur jadwal pribadi, proyek kuliah, sampai memimpin startup, semua butuh MO. Ini superpower yang bisa kamu latih dari sekarang agar <strong>cepat, fleksibel, dan berdampak</strong>!</p>
+            <p class="mt-8 text-sm">&copy; 2025 Interactive Learning Experience. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fade-in animation on scroll
+            const faders = document.querySelectorAll('.fade-in');
+            const appearOptions = {
+                threshold: 0.2,
+                rootMargin: "0px 0px -50px 0px"
+            };
+            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('visible');
+                        appearOnScroll.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+
+            // Gen Z Tabs functionality
+            const tabsContainer = document.getElementById('gen-z-tabs');
+            const tabButtons = tabsContainer.querySelectorAll('.tab-btn');
+            const tabContents = tabsContainer.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                        if (content.id === `tab-content-${tabId}`) {
+                            content.classList.remove('hidden');
+                        }
+                    });
+                });
+            });
+
+            // No charts from Hall of Fame or Sandbox are present in this version.
+            // If you decide to re-add sections with charts, remember to re-include their Chart.js initializations here.
+        });
+    </script>
+</body>
+</html>
